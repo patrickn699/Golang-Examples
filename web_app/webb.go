@@ -12,8 +12,9 @@ var t *template.Template
 var t2 *template.Template
 
 func main(){
-
-	mux := http.NewServeMux() // create a new ServeMux
+    
+	// create a new ServeMux
+	mux := http.NewServeMux() 
 	// render the html template
 	t = template.Must(template.ParseFiles("templates/index.gohtml"))
 	t2 = template.Must(template.ParseFiles("templates/details.gohtml"))
@@ -30,9 +31,7 @@ func main(){
 	log.Fatal(http.ListenAndServe(":8082", mux))
 
 	
-
 }
-
 
 
 func home(w http.ResponseWriter, r *http.Request){
@@ -44,13 +43,20 @@ func home(w http.ResponseWriter, r *http.Request){
 }
 
 func res(w http.ResponseWriter, r *http.Request){
-	//fmt.Fprintf(w, "You are at res page")
 
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	} else {
+    
+	// get the form values	
 	nm := r.FormValue("login")
 	pass := r.FormValue("password")
 	comp := nm +" "+ pass
+
 	fmt.Println(comp)
 
+	// pass the values to the template through a struct
 	com := struct {
 		First string
 		Last string
@@ -59,6 +65,17 @@ func res(w http.ResponseWriter, r *http.Request){
 		Last: pass,
 	}
 
-
+	//fmt.Println(com)
+    
+	/*
+	type data struct{
+		First string
+		Last string
+	}
+    
+	dat := data{nm, pass}
+	*/
+    // execute the template and pass the struct
 	t2.ExecuteTemplate(w, "details.gohtml", com)
+	}
 }
