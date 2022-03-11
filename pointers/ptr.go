@@ -16,4 +16,16 @@ func main() {
 
 	*l = *l + 5 // v = v + 5
 	fmt.Println(v) // prints 55
+
+	temp := 10
+	fmt.Println("before updating:", temp)
+	update(temp)
+	fmt.Println("after updating:",temp)
+
+
+}
+
+func update(s int){
+	s = s + 1
+	fmt.Println("inside update:",s)
 }
